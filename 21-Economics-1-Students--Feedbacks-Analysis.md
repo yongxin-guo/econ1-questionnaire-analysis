@@ -1,10 +1,12 @@
-Econ1 Students’ Feedbacks Analysis
+Econ1 Student Feedbacks Analysis
 ================
 Yongxin (Yong) GUO, s2093198
 
 ``` r
 econ1 <- read_excel("econ1feed.xlsx")
 ```
+
+## Comparison Analysis
 
 ``` r
 econ1_1 <- econ1 %>% 
@@ -34,10 +36,9 @@ boot_df_1 %>%
     ##   <dbl> <dbl>
     ## 1 0.105 0.211
 
-We are 75% confident to say that amongth the current Economics 1
-students, the proportion of students, who feel their experience at
-School of Economics is better than other schools, is roughly between 11%
-and 21%.
+We are 75% confident to say that among the current Economics 1 students,
+the proportion of students, who feel their experience at School of
+Economics is better than other schools, is roughly between 11% and 21%.
 
 ``` r
 econ1_2 <- econ1 %>% 
@@ -67,10 +68,10 @@ boot_df_2 %>%
     ##   <dbl> <dbl>
     ## 1 0.719 0.842
 
-We are 75% confident to say that amongth the current Economics 1
-students, the proportion of students, who feel their experience at
-School of Economics is not worse than other schools, is roughly between
-72% and 84%.
+We are 75% confident to say that among the current Economics 1 students,
+the proportion of students, who feel their experience at School of
+Economics is not worse than other schools, is roughly between 72% and
+84%.
 
 ``` r
 econ1_3 <- econ1 %>% 
@@ -100,9 +101,9 @@ boot_df_3 %>%
     ##    <dbl> <dbl>
     ## 1 0.0526 0.158
 
-We are 75% confident to say that amongth the current Economics 1
-students, the proportion of students, who feel their experience in
-Economics 1 is better than other courses, is roughly between 5% and 16%.
+We are 75% confident to say that among the current Economics 1 students,
+the proportion of students, who feel their experience in Economics 1 is
+better than other courses, is roughly between 5% and 16%.
 
 ``` r
 econ1_4 <- econ1 %>% 
@@ -132,10 +133,9 @@ boot_df_4 %>%
     ##   <dbl> <dbl>
     ## 1 0.719 0.842
 
-We are 75% confident to say that amongth the current Economics 1
-students, the proportion of students, who feel their experience in
-Economics 1 is not worse than other courses, is roughly between 72% and
-84%.
+We are 75% confident to say that among the current Economics 1 students,
+the proportion of students, who feel their experience in Economics 1 is
+not worse than other courses, is roughly between 72% and 84%.
 
 ``` r
 econ1_5 <- econ1 %>% 
@@ -165,10 +165,10 @@ boot_df_5 %>%
     ##   <dbl> <dbl>
     ## 1 0.140 0.246
 
-We are 75% confident to say that amongth the current Economics 1
-students, the proportion of students, who feel their Economics 1
-tutorial experience is better than tutorials of other courses, is
-roughly between 14% and 25%.
+We are 75% confident to say that among the current Economics 1 students,
+the proportion of students, who feel their Economics 1 tutorial
+experience is better than tutorials of other courses, is roughly between
+14% and 25%.
 
 ``` r
 econ1_6 <- econ1 %>% 
@@ -198,7 +198,73 @@ boot_df_6 %>%
     ##   <dbl> <dbl>
     ## 1 0.789 0.895
 
-We are 75% confident to say that amongth the current Economics 1
-students, the proportion of students, who feel their Economics 1
-tutorial experience is not worse than tutorials of other courses, is
-roughly between 79% and 90%.
+We are 75% confident to say that among the current Economics 1 students,
+the proportion of students, who feel their Economics 1 tutorial
+experience is not worse than tutorials of other courses, is roughly
+between 79% and 90%.
+
+## Rating Analysis
+
+``` r
+econ1_7 <- econ1 %>% 
+  mutate(
+    `teaching-s1` = case_when(
+      `teaching-s1` %in% c("4", "5") ~ "Yes",
+      `teaching-s1` %in% c("1", "2", "3") ~ "No"
+  ))
+```
+
+``` r
+set.seed(1000)
+boot_df_7 <- econ1_7 %>% 
+  specify(response = `teaching-s1`, success = "Yes") %>% 
+  generate(reps = 15000, type = "bootstrap") %>% 
+  calculate(stat = "prop")
+```
+
+``` r
+boot_df_7 %>%
+  summarize(lower = quantile(stat, 0.125),
+            upper = quantile(stat, 0.875))
+```
+
+    ## # A tibble: 1 x 2
+    ##   lower upper
+    ##   <dbl> <dbl>
+    ## 1 0.544 0.684
+
+We are 75% confident to say that among the current Economics 1 students,
+the proportion of students, who rated Semester 1 teaching a 4 or above,
+is roughly between 54% and 68%.
+
+``` r
+econ1_8 <- econ1 %>% 
+  mutate(
+    `teaching-s2` = case_when(
+      `teaching-s2` %in% c("4", "5") ~ "Yes",
+      `teaching-s2` %in% c("1", "2", "3") ~ "No"
+  ))
+```
+
+``` r
+set.seed(1000)
+boot_df_8 <- econ1_8 %>% 
+  specify(response = `teaching-s2`, success = "Yes") %>% 
+  generate(reps = 15000, type = "bootstrap") %>% 
+  calculate(stat = "prop")
+```
+
+``` r
+boot_df_8 %>%
+  summarize(lower = quantile(stat, 0.125),
+            upper = quantile(stat, 0.875))
+```
+
+    ## # A tibble: 1 x 2
+    ##   lower upper
+    ##   <dbl> <dbl>
+    ## 1 0.491 0.632
+
+We are 75% confident to say that among the current Economics 1 students,
+the proportion of students, who rated Semester 2 teaching a 4 or above,
+is roughly between 49% and 63%.
